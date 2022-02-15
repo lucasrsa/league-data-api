@@ -1,4 +1,4 @@
-package com.github.lucasrsa.leaguedataapi.domain;
+package com.github.lucasrsa.leaguedataapi.domain.model;
 
 public class Standing {
     private int games;

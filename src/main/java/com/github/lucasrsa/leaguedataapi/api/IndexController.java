@@ -1,35 +1,50 @@
 package com.github.lucasrsa.leaguedataapi.api;
 
 import com.github.lucasrsa.leaguedataapi.domain.DataService;
-import com.github.lucasrsa.leaguedataapi.domain.Team;
+import com.github.lucasrsa.leaguedataapi.domain.dto.TeamDTO;
 import com.github.lucasrsa.leaguedataapi.domain.dto.TournamentDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class IndexController {
-    @Autowired
-    DataService dataService;
 
-    @GetMapping(value = {"/tournament", "/tournaments"})
-    public List<TournamentDTO> getTournament() {
+    @Autowired
+    private final DataService dataService;
+
+    @GetMapping(path = {"tournament", "tournaments"})
+    public List<TournamentDTO> getTournaments() {
         return dataService.getTournaments();
     }
 
-    @GetMapping(value = {"/team", "/teams"})
-    public List<Team> getTeams() {
+    @GetMapping(path = {"tournament", "tournaments"}, params = "year")
+    public List<TournamentDTO> getTournaments(@RequestParam Long year) {
+        return dataService.getTournaments(year);
+    }
+
+    @GetMapping(path = {"tournament", "tournaments"}, params = "tag")
+    public TournamentDTO getTournament(@RequestParam String tag) {
+        return dataService.getTournament(tag);
+    }
+
+    @GetMapping(path = {"team", "teams"})
+    public List<TeamDTO> getTeams() {
         return dataService.getTeams();
     }
 
-    @GetMapping("/team/{tag}")
-    public Team getTeam(@PathVariable("tag") String tag) {
-        return dataService.getTeam(tag);
+    @GetMapping(path = {"team", "teams"}, params = "tag")
+    public List<TeamDTO> getTeams(@RequestParam String tag) {
+        return dataService.getTeams(tag);
+    }
+
+    @GetMapping(path = {"team", "teams"}, params = {"tag", "region"})
+    public TeamDTO getTeam(@RequestParam String tag, @RequestParam String region) {
+        return dataService.getTeam(tag, region);
     }
 
 }

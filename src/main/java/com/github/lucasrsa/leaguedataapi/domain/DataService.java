@@ -1,51 +1,56 @@
 package com.github.lucasrsa.leaguedataapi.domain;
 
+import com.github.lucasrsa.leaguedataapi.db.repository.MatchRepository;
+import com.github.lucasrsa.leaguedataapi.db.repository.ScheduleRepository;
+import com.github.lucasrsa.leaguedataapi.db.repository.TeamRepository;
+import com.github.lucasrsa.leaguedataapi.db.repository.TournamentRepository;
+import com.github.lucasrsa.leaguedataapi.domain.dto.TeamDTO;
 import com.github.lucasrsa.leaguedataapi.domain.dto.TournamentDTO;
-import com.github.lucasrsa.leaguedataapi.utils.FileUtils;
-import lombok.SneakyThrows;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class DataService {
-    private List<Tournament> tournaments;
 
-    public DataService() {
-        this.tournaments = new ArrayList<>();
-        loadData();
+    @Autowired
+    private final TournamentRepository tournamentRepository;
+
+    @Autowired
+    private final TeamRepository teamRepository;
+
+    @Autowired
+    private final MatchRepository matchRepository;
+
+    @Autowired
+    private final ScheduleRepository scheduleRepository;
+
+    public List<TournamentDTO> getTournaments(){
+        return tournamentRepository.findAll().stream().map(TournamentDTO::new).collect(Collectors.toList());
     }
 
-    @SneakyThrows
-    private void loadData() {
-        tournaments = FileUtils.loadTournaments();
-        tournaments.forEach(t -> {
-            try {
-                FileUtils.loadTeams(t);
-                FileUtils.loadSchedule(t);
-            } catch (IOException ignored) {
-            }
-        });
+    public List<TournamentDTO> getTournaments(Long year){
+        return tournamentRepository.findByYear(year).stream().map(TournamentDTO::new).collect(Collectors.toList());
     }
 
-    public List<TournamentDTO> getTournaments() {
-        return tournaments.stream().map(TournamentDTO::new).collect(Collectors.toList());
+    public TournamentDTO getTournament(String tag){
+        return new TournamentDTO(tournamentRepository.getFirstByTag(tag));
     }
 
-    public List<Team> getTeams() {
-        return tournaments.stream().flatMap(t -> t.getTeams().values().stream()).collect(Collectors.toList());
+    public List<TeamDTO> getTeams(){
+        return teamRepository.findAll().stream().map(TeamDTO::new).collect(Collectors.toList());
     }
 
-    public Team getTeam(String tag) {
-        for (Tournament t : tournaments) {
-            Team team = t.getTeam(tag);
-            if (team != null)
-                return team;
-        }
-        return null;
+    public List<TeamDTO> getTeams(String tag){
+        return teamRepository.findAll().stream().map(TeamDTO::new).collect(Collectors.toList());
+    }
+
+    public TeamDTO getTeam(String tag, String region){
+        return new TeamDTO(teamRepository.getFirstByTagAndRegion(tag, region));
     }
 
 }
