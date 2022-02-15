@@ -1,4 +1,4 @@
-package com.github.lucasrsa.leaguedataapi.db.repository;
+package com.github.lucasrsa.leaguedataapi.db;
 
 import com.github.lucasrsa.leaguedataapi.domain.model.Tournament;
 import org.springframework.data.repository.CrudRepository;
@@ -9,10 +9,12 @@ import java.util.List;
 @Repository
 public interface TournamentRepository extends CrudRepository<Tournament, Long> {
 
-    Tournament getFirstByTag(String tag);
-
-    List<Tournament> findByYear(Long year);
-
     List<Tournament> findAll();
+
+    List<Tournament> findByTag(String tag);
+
+    List<Tournament> findByYear(int year);
+
+    List<Tournament> findByTagAndYear(String tag, int year);
 
 }

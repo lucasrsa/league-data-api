@@ -1,5 +1,8 @@
 package com.github.lucasrsa.leaguedataapi.domain.model;
 
+import lombok.Data;
+
+@Data
 public class Standing {
     private int games;
     private int wins;
@@ -21,8 +24,8 @@ public class Standing {
         this.losses++;
     }
 
-    public int winPercentage() {
-        if (games < 0) return (wins * 100) / games;
+    public double getWinPercentage() {
+        if (games < 0) return (wins * 100.) / games;
         return 0;
     }
 
