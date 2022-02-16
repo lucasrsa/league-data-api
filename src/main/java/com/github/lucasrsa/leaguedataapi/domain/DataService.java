@@ -41,6 +41,14 @@ public class DataService {
         return tournamentRepository.findByYear(year).stream().map(TournamentDTO::new).collect(Collectors.toList());
     }
 
+    public List<TournamentDTO> getTournamentList(String tag) {
+        return tournamentRepository.findByTag(tag).stream().map(TournamentDTO::new).collect(Collectors.toList());
+    }
+
+    public List<TournamentDTO> getTournamentList(String tag, int year) {
+        return tournamentRepository.findByTagAndYear(tag, year).stream().map(TournamentDTO::new).collect(Collectors.toList());
+    }
+
     public TournamentDTO getTournament(String tag) {
         List<Tournament> tournamentList = tournamentRepository.findByTag(tag);
         tournamentList.sort(Tournament::compareTo);
@@ -53,14 +61,6 @@ public class DataService {
         return !tournamentList.isEmpty() ? new TournamentDTO(tournamentList.get(tournamentList.size() - 1)) : null;
     }
 
-    public List<TournamentDTO> getTournamentList(String tag) {
-        return tournamentRepository.findByTag(tag).stream().map(TournamentDTO::new).collect(Collectors.toList());
-    }
-
-    public List<TournamentDTO> getTournamentList(String tag, int year) {
-        return tournamentRepository.findByTagAndYear(tag, year).stream().map(TournamentDTO::new).collect(Collectors.toList());
-    }
-
     public List<TeamDTO> getTeamList() {
         return teamRepository.findAll().stream().map(TeamDTO::new).collect(Collectors.toList());
     }
@@ -70,7 +70,8 @@ public class DataService {
     }
 
     public TeamDTO getTeam(String tag, String region) {
-        return new TeamDTO(teamRepository.getFirstByTagAndRegion(tag, region));
+        Team team = teamRepository.getFirstByTagAndRegion(tag, region);
+        return team != null ? new TeamDTO(team) : null;
     }
 
     public StandingDTO getTeamStanding(String tag) {

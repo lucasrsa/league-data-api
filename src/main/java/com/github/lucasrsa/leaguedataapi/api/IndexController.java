@@ -23,19 +23,35 @@ public class IndexController {
     @Autowired
     private final DataService dataService;
 
-    @GetMapping(path = {"tournament", "tournaments"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = {"tournaments"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TournamentDTO> getTournamentList() {
         return dataService.getTournamentList();
     }
 
-    @GetMapping(path = {"tournament", "tournaments"}, params = "year", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = {"tournaments"}, params = "tag", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<TournamentDTO> getTournamentList(@RequestParam String tag) {
+        return dataService.getTournamentList(tag);
+    }
+
+    @GetMapping(path = {"tournaments"}, params = "year", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TournamentDTO> getTournamentList(@RequestParam int year) {
         return dataService.getTournamentList(year);
     }
 
-    @GetMapping(path = {"tournament", "tournaments"}, params = "tag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = {"tournaments"}, params = {"tag", "year"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<TournamentDTO> getTournamentList(@RequestParam String tag, @RequestParam int year) {
+        return dataService.getTournamentList(tag, year);
+    }
+
+    @GetMapping(path = {"tournament"}, params = "tag", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TournamentDTO> getTournament(@RequestParam String tag) {
         TournamentDTO tournament = dataService.getTournament(tag);
+        return tournament != null ? ResponseEntity.ok(tournament) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(path = {"tournament"}, params = {"tag", "year"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TournamentDTO> getTournament(@RequestParam String tag, @RequestParam int year) {
+        TournamentDTO tournament = dataService.getTournament(tag, year);
         return tournament != null ? ResponseEntity.ok(tournament) : ResponseEntity.notFound().build();
     }
 
