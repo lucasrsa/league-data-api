@@ -7,6 +7,7 @@ import com.github.lucasrsa.leaguedataapi.domain.dto.TournamentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,8 +34,9 @@ public class IndexController {
     }
 
     @GetMapping(path = {"tournament", "tournaments"}, params = "tag", produces = MediaType.APPLICATION_JSON_VALUE)
-    public TournamentDTO getTournament(@RequestParam String tag) {
-        return dataService.getTournament(tag);
+    public ResponseEntity<TournamentDTO> getTournament(@RequestParam String tag) {
+        TournamentDTO tournament = dataService.getTournament(tag);
+        return tournament != null ? ResponseEntity.ok(tournament) : ResponseEntity.notFound().build();
     }
 
     @GetMapping(path = {"team", "teams"}, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -48,18 +50,21 @@ public class IndexController {
     }
 
     @GetMapping(path = {"team", "teams"}, params = {"tag", "region"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public TeamDTO getTeam(@RequestParam String tag, @RequestParam String region) {
-        return dataService.getTeam(tag, region);
+    public ResponseEntity<TeamDTO> getTeam(@RequestParam String tag, @RequestParam String region) {
+        TeamDTO team = dataService.getTeam(tag, region);
+        return team != null ? ResponseEntity.ok(team) : ResponseEntity.notFound().build();
     }
 
     @GetMapping(path = {"standing", "standings"}, params = {"team"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public StandingDTO getTeamStanding(@RequestParam String team) {
-        return dataService.getTeamStanding(team);
+    public ResponseEntity<StandingDTO> getTeamStanding(@RequestParam String team) {
+        StandingDTO standing = dataService.getTeamStanding(team);
+        return standing != null ? ResponseEntity.ok(standing) : ResponseEntity.notFound().build();
     }
 
     @GetMapping(path = {"standing", "standings"}, params = {"team", "region"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public StandingDTO getTeamStanding(@RequestParam String team, @RequestParam String region) {
-        return dataService.getTeamStanding(team, region);
+    public ResponseEntity<StandingDTO> getTeamStanding(@RequestParam String team, @RequestParam String region) {
+        StandingDTO standing = dataService.getTeamStanding(team, region);
+        return standing != null ? ResponseEntity.ok(standing) : ResponseEntity.notFound().build();
     }
 
 }
