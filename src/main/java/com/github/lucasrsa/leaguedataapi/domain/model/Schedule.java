@@ -20,9 +20,6 @@ public class Schedule {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Match> matches;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Tournament tournament;
-
     public void addMatch(Match match) {
         matches.add(match);
     }

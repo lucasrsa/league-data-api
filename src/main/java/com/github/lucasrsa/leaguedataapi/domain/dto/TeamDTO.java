@@ -8,13 +8,15 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class TeamDTO {
+    private final Long id;
     private final String tag;
     private final String name;
-    private final String region;
+    private final Long tournamentId;
 
     public TeamDTO(Team team) {
+        this.id = team.getId();
         this.tag = team.getTag();
         this.name = team.getName();
-        this.region = team.getRegion();
+        this.tournamentId = team.getTournament().getId();
     }
 }

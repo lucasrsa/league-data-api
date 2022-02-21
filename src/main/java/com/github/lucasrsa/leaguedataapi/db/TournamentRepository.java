@@ -11,10 +11,10 @@ public interface TournamentRepository extends CrudRepository<Tournament, Long> {
 
     List<Tournament> findAll();
 
-    List<Tournament> findByTag(String tag);
+    Tournament getById(long id);
 
-    List<Tournament> findByYear(int year);
+    Tournament getFirstByTag(String tag);
 
-    List<Tournament> findByTagAndYear(String tag, int year);
+    List<Tournament> findByRegion(String region);
 
 }

@@ -1,5 +1,6 @@
 package com.github.lucasrsa.leaguedataapi.domain.model;
 
+import com.github.lucasrsa.leaguedataapi.domain.dto.TournamentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -29,17 +31,8 @@ public class Tournament {
     @Column(nullable = false)
     private String region;
 
-    @Column(nullable = false)
-    private int year;
-
-    @Column(nullable = false)
-    private int sequence = 0;
-
-    @OneToMany(mappedBy = "tournament", fetch = FetchType.LAZY)
-    private Set<Team> teams;
-
-    @OneToOne(mappedBy = "tournament", fetch = FetchType.LAZY)
-    private Schedule schedule;
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Team> teams = new HashSet<>();
 
     private HashMap<Team, Standing> standings;
 
@@ -52,14 +45,6 @@ public class Tournament {
             processStandings();
         }
         return standings.get(team);
-    }
-
-    public int compareTo(Object o) {
-        if (this == o) return 0;
-        if (this.equals(o)) return 0;
-        Tournament that = (Tournament) o;
-        if (this.year != that.getYear()) return Integer.compare(this.year, that.getYear());
-        return Integer.compare(this.sequence, that.getSequence());
     }
 
 }

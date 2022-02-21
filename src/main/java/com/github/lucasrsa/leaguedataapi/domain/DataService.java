@@ -4,10 +4,8 @@ import com.github.lucasrsa.leaguedataapi.db.MatchRepository;
 import com.github.lucasrsa.leaguedataapi.db.ScheduleRepository;
 import com.github.lucasrsa.leaguedataapi.db.TeamRepository;
 import com.github.lucasrsa.leaguedataapi.db.TournamentRepository;
-import com.github.lucasrsa.leaguedataapi.domain.dto.StandingDTO;
 import com.github.lucasrsa.leaguedataapi.domain.dto.TeamDTO;
 import com.github.lucasrsa.leaguedataapi.domain.dto.TournamentDTO;
-import com.github.lucasrsa.leaguedataapi.domain.model.Standing;
 import com.github.lucasrsa.leaguedataapi.domain.model.Team;
 import com.github.lucasrsa.leaguedataapi.domain.model.Tournament;
 import lombok.RequiredArgsConstructor;
@@ -37,51 +35,78 @@ public class DataService {
         return tournamentRepository.findAll().stream().map(TournamentDTO::new).collect(Collectors.toList());
     }
 
-    public List<TournamentDTO> getTournamentList(int year) {
-        return tournamentRepository.findByYear(year).stream().map(TournamentDTO::new).collect(Collectors.toList());
+    public List<TournamentDTO> getTournamentList(String region) {
+        return tournamentRepository.findByRegion(region).stream().map(TournamentDTO::new).collect(Collectors.toList());
     }
 
-    public List<TournamentDTO> getTournamentList(String tag) {
-        return tournamentRepository.findByTag(tag).stream().map(TournamentDTO::new).collect(Collectors.toList());
-    }
-
-    public List<TournamentDTO> getTournamentList(String tag, int year) {
-        return tournamentRepository.findByTagAndYear(tag, year).stream().map(TournamentDTO::new).collect(Collectors.toList());
+    public TournamentDTO getTournament(long id) {
+        return new TournamentDTO(tournamentRepository.getById(id));
     }
 
     public TournamentDTO getTournament(String tag) {
-        List<Tournament> tournamentList = tournamentRepository.findByTag(tag);
-        tournamentList.sort(Tournament::compareTo);
-        return !tournamentList.isEmpty() ? new TournamentDTO(tournamentList.get(tournamentList.size() - 1)) : null;
+        return new TournamentDTO(tournamentRepository.getFirstByTag(tag));
     }
 
-    public TournamentDTO getTournament(String tag, int year) {
-        List<Tournament> tournamentList = tournamentRepository.findByTagAndYear(tag, year);
-        tournamentList.sort(Tournament::compareTo);
-        return !tournamentList.isEmpty() ? new TournamentDTO(tournamentList.get(tournamentList.size() - 1)) : null;
+    public TournamentDTO updateTournament(TournamentDTO tournamentDTO) {
+        Tournament tournament;
+        if (tournamentDTO.getId() != null) {
+            tournament = tournamentRepository.getById(tournamentDTO.getId());
+        } else {
+            tournament = new Tournament();
+        }
+        if (tournamentDTO.getTag() != null) {
+            tournament.setTag(tournamentDTO.getTag());
+        }
+        if (tournamentDTO.getName() != null) {
+            tournament.setName(tournamentDTO.getName());
+        }
+        if (tournamentDTO.getRegion() != null) {
+            tournament.setRegion(tournamentDTO.getRegion());
+        }
+        if (tournamentDTO.getTeams() != null) {
+            tournament.setTeams(tournamentDTO.getTeams().stream().map(teamRepository::getById).collect(Collectors.toSet()));
+        }
+        return new TournamentDTO(tournamentRepository.save(tournament));
     }
 
     public List<TeamDTO> getTeamList() {
         return teamRepository.findAll().stream().map(TeamDTO::new).collect(Collectors.toList());
     }
 
-    public List<TeamDTO> getTeamList(String tag) {
-        return teamRepository.findByTag(tag).stream().map(TeamDTO::new).collect(Collectors.toList());
+    public List<TeamDTO> getTeamList(long tournament) {
+        return teamRepository.findByTournament(tournamentRepository.getById(tournament)).stream().map(TeamDTO::new).collect(Collectors.toList());
     }
 
-    public TeamDTO getTeam(String tag, String region) {
-        Team team = teamRepository.getFirstByTagAndRegion(tag, region);
+    public TeamDTO getTeam(long id) {
+        Team team = teamRepository.getById(id);
         return team != null ? new TeamDTO(team) : null;
     }
 
-    public StandingDTO getTeamStanding(String tag) {
+    public TeamDTO getTeam(String tag) {
         Team team = teamRepository.getFirstByTag(tag);
-        return team != null ? new StandingDTO(team.getTournament().getTeamStanding(team)) : null;
+        return team != null ? new TeamDTO(team) : null;
     }
 
-    public StandingDTO getTeamStanding(String tag, String region) {
-        Team team = teamRepository.getFirstByTagAndRegion(tag, region);
-        return team != null ? new StandingDTO(team.getTournament().getTeamStanding(team)) : null;
+    public TeamDTO updateTeam(TeamDTO teamDTO) {
+        if (teamDTO.getTournamentId() == null) {
+            return null;
+        }
+        Team team;
+        Tournament tournament = tournamentRepository.getById(teamDTO.getTournamentId());
+        if (teamDTO.getId() != null) {
+            team = teamRepository.getById(teamDTO.getId());
+        }
+        return teamDTO;
     }
+
+//    public StandingDTO getTeamStanding(String tag) {
+//        Team team = teamRepository.getFirstByTag(tag);
+//        return team != null ? new StandingDTO(team.getTournament().getTeamStanding(team)) : null;
+//    }
+//
+//    public StandingDTO getTeamStanding(String tag, String region) {
+//        Team team = teamRepository.getFirstByTagAndRegion(tag, region);
+//        return team != null ? new StandingDTO(team.getTournament().getTeamStanding(team)) : null;
+//    }
 
 }
