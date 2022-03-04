@@ -21,7 +21,7 @@ public class Schedule {
     private long id;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Match> matches;
+    private List<Match> matches = new ArrayList<>();
 
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private Tournament tournament;
