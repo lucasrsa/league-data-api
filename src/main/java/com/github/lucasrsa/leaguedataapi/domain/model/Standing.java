@@ -25,8 +25,8 @@ public class Standing {
     }
 
     public double getWinPercentage() {
-        if (games < 0) return (wins * 100.) / games;
-        return 0;
+        if (games > 0) return (wins * 100.) / games;
+        return 0.;
     }
 
 }
