@@ -19,13 +19,13 @@ class TournamentTest {
     private final HashMap<Team, Standing> standings = new HashMap<>();
     private final HashMap<Team, HashMap<Team, Standing>> headToHeads = new HashMap<>();
     private final Match match = new Match();
-    private final Team team = new Team();
+    private final Team team1 = new Team();
     private final Team team2 = new Team();
 
     @BeforeEach
     void setUp() {
         tournament = new Tournament();
-        team2.setId(2);
+        team2.setId(team1.getId() + 1);
     }
 
     @Test
@@ -61,37 +61,37 @@ class TournamentTest {
 
     @Test
     void getTeamStanding() {
-        tournament.addTeam(team);
-        assertEquals(0, tournament.getTeamStanding(team).getGames());
+        tournament.addTeam(team1);
+        assertEquals(0, tournament.getTeamStanding(team1).getGames());
     }
 
     @Test
     void getTeamStandingNoTeam() {
-        assertThrows(EntityNotFoundException.class, () -> tournament.getTeamStanding(team));
+        assertThrows(EntityNotFoundException.class, () -> tournament.getTeamStanding(team1));
     }
 
     @Test
     void getTeamHeadToHead() {
-        tournament.addTeam(team);
+        tournament.addTeam(team1);
         tournament.addTeam(team2);
-        assertEquals(0, tournament.getTeamHeadToHead(team, team2).getGames());
+        assertEquals(0, tournament.getTeamHeadToHead(team1, team2).getGames());
     }
 
     @Test
     void getTeamHeadToHeadNoTeam() {
-        assertThrows(EntityNotFoundException.class, () -> tournament.getTeamHeadToHead(team, team2));
+        assertThrows(EntityNotFoundException.class, () -> tournament.getTeamHeadToHead(team1, team2));
     }
 
     @Test
     void getTeamHeadToHeadNoTeam1() {
         tournament.addTeam(team2);
-        assertThrows(EntityNotFoundException.class, () -> tournament.getTeamHeadToHead(team, team2));
+        assertThrows(EntityNotFoundException.class, () -> tournament.getTeamHeadToHead(team1, team2));
     }
 
     @Test
     void getTeamHeadToHeadNoTeam2() {
-        tournament.addTeam(team);
-        assertThrows(EntityNotFoundException.class, () -> tournament.getTeamHeadToHead(team, team2));
+        tournament.addTeam(team1);
+        assertThrows(EntityNotFoundException.class, () -> tournament.getTeamHeadToHead(team1, team2));
     }
 
     @Test
