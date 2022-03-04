@@ -43,6 +43,11 @@ class TournamentTest {
     }
 
     @Test
+    void testHashCode() {
+        assertEquals(Objects.hash(tournament.getId()), tournament.hashCode());
+    }
+
+    @Test
     void addMatch() {
         tournament.setSchedule(schedule);
         tournament.addMatch(match);
@@ -91,7 +96,7 @@ class TournamentTest {
 
     @Test
     void getId() {
-        assertEquals(0, tournament.getId());
+        assertEquals(0L, tournament.getId());
     }
 
     @Test
@@ -175,15 +180,5 @@ class TournamentTest {
     void setHeadToHeads() {
         tournament.setHeadToHeads(headToHeads);
         assertEquals(headToHeads, tournament.getHeadToHeads());
-    }
-
-    @Test
-    void hashCodeEquals() {
-        assertEquals(Objects.hash(tournament.getId()), tournament.hashCode());
-    }
-
-    @Test
-    void hashCodeNotEquals() {
-        assertNotEquals(Objects.hash(id), tournament.hashCode());
     }
 }
