@@ -3,14 +3,12 @@ package com.github.lucasrsa.leaguedataapi.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Data
 @Entity
-@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Team {
@@ -25,7 +23,7 @@ public class Team {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Tournament tournament;
 
     @Override

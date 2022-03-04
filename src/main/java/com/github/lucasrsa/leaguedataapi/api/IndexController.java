@@ -33,12 +33,6 @@ public class IndexController {
     @Autowired
     private final TeamRepository teamRepository;
 
-    @PostMapping(path = "test", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public String test(@RequestBody Team team) {
-        System.out.println("hit");
-        return "ok";
-    }
-
     @GetMapping(path = "tournaments", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TournamentDTO> getTournamentList() {
         return dataService.getTournamentList();

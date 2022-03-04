@@ -5,6 +5,8 @@ import com.github.lucasrsa.leaguedataapi.domain.model.Team;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.HashMap;
+
 @Data
 @AllArgsConstructor
 public class StandingDTO {

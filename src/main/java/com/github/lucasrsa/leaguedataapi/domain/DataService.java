@@ -64,7 +64,7 @@ public class DataService {
             tournament.setRegion(tournamentDTO.getRegion());
         }
         if (tournamentDTO.getTeams() != null) {
-            tournament.setTeams(tournamentDTO.getTeams().stream().map(teamRepository::getById).collect(Collectors.toSet()));
+            tournament.setTeams(tournamentDTO.getTeams().stream().map(teamDTO -> teamRepository.getById(updateTeam(teamDTO).getId())).collect(Collectors.toSet()));
         }
         return new TournamentDTO(tournamentRepository.save(tournament));
     }
@@ -95,8 +95,25 @@ public class DataService {
         Tournament tournament = tournamentRepository.getById(teamDTO.getTournamentId());
         if (teamDTO.getId() != null) {
             team = teamRepository.getById(teamDTO.getId());
+        } else if (teamDTO.getTag() != null) {
+            team = teamRepository.getFirstByTag(teamDTO.getTag());
+        } else {
+            return null;
         }
-        return teamDTO;
+        if (team == null) {
+            team = new Team();
+        }
+        if (teamDTO.getId() != null) {
+            team.setId(teamDTO.getId());
+        }
+        if (teamDTO.getTag() != null) {
+            team.setTag(teamDTO.getTag());
+        }
+        if (teamDTO.getName() != null) {
+            team.setName(teamDTO.getName());
+        }
+        team.setTournament(tournament);
+        return new TeamDTO(teamRepository.save(team));
     }
 
 //    public StandingDTO getTeamStanding(String tag) {

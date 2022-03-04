@@ -1,6 +1,5 @@
 package com.github.lucasrsa.leaguedataapi.domain.dto;
 
-import com.github.lucasrsa.leaguedataapi.domain.model.Team;
 import com.github.lucasrsa.leaguedataapi.domain.model.Tournament;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,13 +14,13 @@ public class TournamentDTO {
     private final String tag;
     private final String name;
     private final String region;
-    private final Set<Long> teams;
+    private final Set<TeamDTO> teams;
 
     public TournamentDTO(Tournament tournament) {
         this.id = tournament.getId();
         this.tag = tournament.getTag();
         this.name = tournament.getName();
         this.region = tournament.getRegion();
-        this.teams = tournament.getTeams().stream().map(Team::getId).collect(Collectors.toSet());
+        this.teams = tournament.getTeams().stream().map(TeamDTO::new).collect(Collectors.toSet());
     }
 }

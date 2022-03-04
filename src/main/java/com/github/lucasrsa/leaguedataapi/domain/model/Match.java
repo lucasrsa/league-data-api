@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Entity
@@ -15,6 +16,9 @@ public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Temporal(TemporalType.TIME)
+    private Date date;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Team blueTeam;
