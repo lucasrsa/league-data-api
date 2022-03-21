@@ -10,11 +10,18 @@
 	</parent>
 	<groupId>com.github.lucasrsa</groupId>
 	<artifactId>league-data-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>League Data API</name>
 	<description>Spring Boot API for League of Legends data</description>
 	<properties>
 		<java.version>17</java.version>
+		<sqlite-dialect.version>0.1.2</sqlite-dialect.version>
+		<okhttp.version>4.9.3</okhttp.version>
+		<gson-fire.version>1.7.1</gson-fire.version>
+		<jackson.version>2.13.2</jackson.version>
+		<jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
+		<swagger-annotations.version>2.1.13</swagger-annotations.version>
+		<openapi-generator-maven-plugin.version>5.4.0</openapi-generator-maven-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -50,7 +57,57 @@
 		<dependency>
 			<groupId>com.github.gwenn</groupId>
 			<artifactId>sqlite-dialect</artifactId>
-			<version>0.1.2</version>
+			<version>${sqlite-dialect.version}</version>
+		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.apache.spark</groupId>-->
+<!--			<artifactId>spark-core_2.13</artifactId>-->
+<!--			<version>3.2.1</version>-->
+<!--		</dependency>-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>${jackson-databind-nullable.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger-annotations.version}</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>${openapi-generator-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/swagger.yaml</inputSpec>
+							<generatorName>spring</generatorName>
+							<output>${project.build.directory}/generated-sources/annotations</output>
+							<modelPackage>${project.groupId}.generated.models</modelPackage>
+							<apiPackage>${project.groupId}.generated.controllers</apiPackage>
+							<configOptions>
+								<delegatePattern>true</delegatePattern>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
