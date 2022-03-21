@@ -1,7 +1,5 @@
 package com.github.lucasrsa.leaguedataapi.api;
 
-import com.github.lucasrsa.leaguedataapi.db.TeamRepository;
-import com.github.lucasrsa.leaguedataapi.db.TournamentRepository;
 import com.github.lucasrsa.leaguedataapi.domain.DataService;
 import com.github.lucasrsa.leaguedataapi.domain.dto.StandingDTO;
 import com.github.lucasrsa.leaguedataapi.domain.dto.TeamDTO;
@@ -26,12 +24,6 @@ public class IndexController {
 
     @Autowired
     private final DataService dataService;
-
-    @Autowired
-    private final TournamentRepository tournamentRepository;
-
-    @Autowired
-    private final TeamRepository teamRepository;
 
     @GetMapping(path = "tournaments", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TournamentDTO> getTournamentList() {
